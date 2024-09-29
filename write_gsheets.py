@@ -13,15 +13,14 @@ def write_gsheets(title="Full Name Upload", customers=None):
             'https://www.googleapis.com/auth/drive'
         ]
         current_directory = os.getcwd()
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            os.path.join(current_directory, "data", "secret_key.json"), 
-            scopes=scopes
-        )
 
-        client = gspread.authorize(creds)
-        workbook = client.open("Juan Dispatch <> QBO Test")
+        creds = ServiceAccountCredentials.from_json_keyfile_name(f"{current_directory}\\data\\secret_key.json", scopes=scopes)
+
+        file = gspread.authorize(creds)
+    
+        workbook = file.open("Juan Dispatch <> QBO Test")
         sheet = workbook.get_worksheet(1)
-
+    
         previous_customers = sheet.col_values(1)
         amount_previous_customers = len(previous_customers)
 

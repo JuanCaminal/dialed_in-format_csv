@@ -42,7 +42,7 @@ def run(playwright: Playwright, start_date, end_date, filename="temporary_file.c
             download = download_info.value
 
             current_directory = os.getcwd()
-            download.save_as(os.path.join(current_directory, filename))
+            download.save_as(current_directory + f"\\{filename}")
         except Exception as e:
             raise Exception(f"Error during download: {str(e)}")
         finally:
