@@ -9,20 +9,23 @@ def main():
     today = datetime.date.today()
     one_day = datetime.timedelta(days=1)
     yesterday = today - one_day
-
-    # Cambia las fechas según lo necesites
+    
+    # Previous dates asked for
+    # start_date = "2024-08-01"
+    # end_date = "2024-08-22"
+    
+    # start_date = "2024-08-23"
+    # end_date = "2024-08-31"
+    
     start_date = yesterday.strftime("%Y-%m-%d")
     end_date = yesterday.strftime("%Y-%m-%d")
-
-    try:
-        with yaspin(text="Downloading csv file...", color="yellow") as spinner:
-            with sync_playwright() as playwright:
-                run(playwright, start_date, end_date, CSV_FILE_NAME, invisible=False)
-            spinner.ok("✔️  Download completed!")
+    
+    with yaspin(text="Downloading csv file...", color="yellow") as spinner:
+        with sync_playwright() as playwright:
+            run(playwright, start_date, end_date, CSV_FILE_NAME, invisible=False)
+        spinner.ok("✔️  Download completed!")
         
-        format_csv.format_csv(CSV_FILE_NAME)
-    except Exception as e:
-        print(f"Error: {str(e)}")
+    format_csv.format_csv(CSV_FILE_NAME)
 
 if __name__ == "__main__":
     main()
