@@ -14,11 +14,11 @@ def main():
     # start_date = "2024-08-01"
     # end_date = "2024-08-22"
     
-    # start_date = "2024-08-23"
-    # end_date = "2024-08-31"
+    start_date = "2024-08-23"
+    end_date = "2024-08-31"
     
-    start_date = yesterday.strftime("%Y-%m-%d")
-    end_date = yesterday.strftime("%Y-%m-%d")
+    # start_date = yesterday.strftime("%Y-%m-%d")
+    # end_date = yesterday.strftime("%Y-%m-%d")
     
     with yaspin(text="Downloading csv file...", color="yellow") as spinner:
         with sync_playwright() as playwright:
