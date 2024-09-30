@@ -19,6 +19,7 @@ def write_gsheets(title="Full Name Upload", customers=None):
         'https://www.googleapis.com/auth/drive'
     ]
 
+
     current_directory = os.getcwd()
 
     creds = ServiceAccountCredentials.from_json_keyfile_name(f"{current_directory}\\data\\secret_key.json", scopes=scopes)
