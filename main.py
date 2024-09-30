@@ -9,6 +9,7 @@ def main():
     today = datetime.date.today()
     one_day = datetime.timedelta(days=1)
     yesterday = today - one_day
+
     
     # Previous dates asked for
     # start_date = "2024-08-01"
@@ -28,6 +29,7 @@ def main():
         with sync_playwright() as playwright:
             run(playwright, start_date, end_date, CSV_FILE_NAME, invisible=False)
         spinner.ok("✔️  Download completed!")
+
 
 if __name__ == "__main__":
     main()
