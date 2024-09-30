@@ -6,7 +6,6 @@ from yaspin import yaspin
 import format_csv
 
 
-
 def run(playwright: Playwright,  start_date, end_date, filename: str="temporary_file.csv", invisible=True) -> None:
     browser = playwright.chromium.launch(headless=invisible)
     context = browser.new_context()

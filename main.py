@@ -30,6 +30,5 @@ def main():
             run(playwright, start_date, end_date, CSV_FILE_NAME, invisible=False)
         spinner.ok("✔️  Download completed!")
 
-
 if __name__ == "__main__":
     main()
