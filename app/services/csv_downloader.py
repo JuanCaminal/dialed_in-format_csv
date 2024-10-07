@@ -60,9 +60,6 @@ def download_data(page, filename):
         download = download_info.value
     
         current_directory = os.getcwd()
-        print("*"*50)
-        print(current_directory)
-        print("*"*50)
         download.save_as(current_directory + f"\\tmp\\{filename}")
         
         return True
