@@ -4,3 +4,4 @@ __pycache__/
 
 config/secret_key.json
 
+config/credentials.json
