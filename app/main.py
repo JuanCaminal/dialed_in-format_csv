@@ -2,11 +2,14 @@ import datetime
 from services.csv_downloader import run
 from playwright.sync_api import sync_playwright
 from yaspin import yaspin
+import json
 
 def main():
     CSV_FILE_NAME = "temporary_file.csv"
-    user = "hmcparker@diblogins.com"
-    password = "eds!WH7#82eLxKmF"
+    
+    credentials = load_credentials()
+    user = credentials["dispatch_username"]
+    password = credentials["dispatch_password"] 
     
     dates = {"start_date":"", "end_date":""}
     
@@ -23,7 +26,7 @@ def main():
     
     with yaspin(text="Downloading csv file...", color="yellow") as spinner:
         with sync_playwright() as playwright:
-            run(playwright, user, password, start_date, end_date, CSV_FILE_NAME, invisible=False)
+            run(playwright, user, password, start_date, end_date, CSV_FILE_NAME)
         spinner.ok("✔️  Download completed!")
 
 def get_yesterday():
@@ -58,8 +61,10 @@ def set_dates_without_data(dates):
     dates["end_date"] = "2024-09-28"
     
     return dates
-    
-    
+
+def load_credentials():
+    with open("config/credentials.json", "r") as f:
+        return json.load(f)
 
 if __name__ == "__main__":
     main()
