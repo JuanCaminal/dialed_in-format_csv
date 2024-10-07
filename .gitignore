@@ -2,5 +2,5 @@
 
 __pycache__/
 
-data/secret_key.json
+config/secret_key.json
 
