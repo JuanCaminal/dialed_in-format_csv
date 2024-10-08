@@ -14,15 +14,20 @@ def format_csv(input_filename='temporary_file.csv'):
     
     csv_file_path = os.path.join(project_root, "tmp", "temporary_file.csv")
     
-    with open(csv_file_path) as input_file:
-        reader = csv.DictReader(input_file)
-        for row in reader:
-            customer = f"{row['customer']} - {row['job_id']}"
-            customers_formatted.append(customer)
+    try:
+        with open(csv_file_path) as input_file:
+            reader = csv.DictReader(input_file)
+            for row in reader:
+                customer = f"{row['customer']} - {row['job_id']}"
+                customers_formatted.append(customer)
 
-    # write_gsheets.write_gsheets(title=TITLE, customers=customers_formatted)
-    gsheets_writer.write_gsheets(title=TITLE, customers=customers_formatted)
-    
+        gsheets_writer.write_gsheets(title=TITLE, customers=customers_formatted)
+    except FileNotFoundError:
+        print(f"CSV file not found at path: {csv_file_path}")
+    except KeyError as e:
+        print(f"Missing key in CSV data: {e}")
+    except Exception as e:
+        print(f"Error occurred during CSV formatting: {e}")
     # Print formatted csv:
     # for cust in customers_formatted:
     #     print(cust)

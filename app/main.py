@@ -7,9 +7,16 @@ import json
 def main():
     CSV_FILE_NAME = "temporary_file.csv"
     
-    credentials = load_credentials()
-    user = credentials["dispatch_username"]
-    password = credentials["dispatch_password"] 
+    try:
+        credentials = load_credentials()
+        user = credentials["dispatch_username"]
+        password = credentials["dispatch_password"]
+    except KeyError as e:
+        print(f"Missing key in credentials: {e}")
+        return
+    except FileNotFoundError:
+        print(f"Credentials file not found. Ensure the file exists in the config folder.")
+        return
     
     dates = {"start_date":"", "end_date":""}
     
@@ -24,10 +31,13 @@ def main():
     start_date = dates["start_date"]
     end_date = dates["end_date"]
     
-    with yaspin(text="Downloading csv file...", color="yellow") as spinner:
-        with sync_playwright() as playwright:
-            run(playwright, user, password, start_date, end_date, CSV_FILE_NAME)
-        spinner.ok("✔️  Download completed!")
+    try:
+        with yaspin(text="Downloading csv file...", color="yellow") as spinner:
+            with sync_playwright() as playwright:
+                run(playwright, user, password, start_date, end_date, CSV_FILE_NAME)
+            spinner.ok("✔️  Download completed!")
+    except Exception as e:
+        print(f"Error occurred during the CSV download process: {e}")
 
 def get_yesterday():
     today = datetime.date.today()
@@ -63,8 +73,13 @@ def set_dates_without_data(dates):
     return dates
 
 def load_credentials():
-    with open("config/credentials.json", "r") as f:
-        return json.load(f)
+    try:
+        with open("config/credentials.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError("Credentials file not found")
+    except json.JSONDecodeErro:
+        raise ValueError("Invalid JSON format in credentials file")
 
 if __name__ == "__main__":
     main()
