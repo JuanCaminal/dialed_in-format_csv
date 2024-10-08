@@ -1,0 +1,6 @@
+google-cloud-storage
+google-cloud-bigquery
+playwright
+yaspin
+gspread
+oauth2client

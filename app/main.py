@@ -73,8 +73,13 @@ def set_dates_without_data(dates):
     return dates
 
 def load_credentials():
-    with open("config/credentials.json", "r") as f:
-        return json.load(f)
+    try:
+        with open("config/credentials.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError("Credentials file not found")
+    except json.JSONDecodeErro:
+        raise ValueError("Invalid JSON format in credentials file")
 
 if __name__ == "__main__":
     main()
