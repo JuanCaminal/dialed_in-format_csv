@@ -5,3 +5,4 @@ playwright
 yaspin
 gspread
 oauth2client
+functions-framework==3.*
