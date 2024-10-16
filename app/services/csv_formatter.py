@@ -20,8 +20,8 @@ def format_csv(input_filename='temporary_file.csv'):
             for row in reader:
                 customer = f"{row['customer']} - {row['job_id']}"
                 customers_formatted.append(customer)
-
-        gsheets_writer.write_gsheets(title=TITLE, customers=customers_formatted)
+                print(customer)
+        # gsheets_writer.write_gsheets(title=TITLE, customers=customers_formatted)
     except FileNotFoundError:
         print(f"CSV file not found at path: {csv_file_path}")
     except KeyError as e:

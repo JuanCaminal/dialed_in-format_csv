@@ -4,16 +4,17 @@ from yaspin import yaspin
 from . import csv_formatter
 LOGIN_URL = "https://work.dispatch.me/login"
 
-def run(playwright: Playwright,  user, password, start_date, end_date, filename: str="temporary_file.csv", invisible=True):
-    try: 
-        browser = playwright.chromium.launch(headless=invisible)
+def run(playwright: Playwright,  user, password, start_date, end_date, filename: str="temporary_file.csv"):
+    try:
+        # browser = playwright.chromium.launch(executable_path="/usr/bin/chromium", args=["--disable-gpu", "--no-sandbox", "--headless"])
+        browser = playwright.chromium.launch(args=["--disable-gpu", "--no-sandbox", "--headless"])
         context = browser.new_context()
         page = context.new_page()
-        
+
         login(page, user, password)
         apply_filters(page, start_date, end_date)
         flag_data_downloaded = download_data(page, filename)
-        
+
         if flag_data_downloaded:
             csv_formatter.format_csv(filename)
     except Exception as e:
@@ -35,7 +36,7 @@ def login(page, user, password):
     except Exception as e:
         print(f"Login failed: {e}")
         raise
-        
+
 def apply_filters(page, start_date, end_date):
     """ Goes to report section and apply the filters for the dates """
     try:
@@ -53,59 +54,69 @@ def apply_filters(page, start_date, end_date):
     except Exception as e:
         print(f"Filtering dates failed {e}")
         raise
-            
+
 def download_data(page, filename):
     """ Waits until the table is loaded and does the download of the CSV file """
-    
+
     try:
-        # Waits for the spinner to be hidden 
+        # Waits for the spinner to be hidden
         spinner_locator = page.frame_locator("#report-dashboard").locator("div:nth-child(19) .spinner").first
         spinner_locator.wait_for(state="hidden", timeout=90000)
     except Exception as e:
         print(f"Error waiting for spinner to disappear: {e}")
         return False
-    
-    try:    
+
+    try:
         #Hover over the table because the button is previously hidden
         page.frame_locator("#report-dashboard").locator(".cover").first.hover()
         # Message shown where the table is empty
         error_message = page.frame_locator("#report-dashboard").locator("div:nth-child(19) > .error-message")
-        
+
         if error_message.is_visible():
             print("\nThere was no data for the selected dates..")
             return False
         else:
             # Selects the download button
             expand_button = page.frame_locator("#report-dashboard").locator(".expand").first
+            print("Ubicacion pre click")
             expand_button.click()
-            with page.expect_download() as download_info:
-                page.frame_locator("#report-dashboard").get_by_text("Download Data").dblclick()
+            print("Ubicacion post click")
+            with page.expect_download(timeout=60000) as download_info:
+                print("Ubicacion 1")
+                download_button = page.frame_locator("#report-dashboard").get_by_text("Download Data")
+                print(f"Download button visible: {download_button.is_visible()}")
+                print(f"Download button enabled: {download_button.is_enabled()}")
+                # download_button.dblclick()
+                page.wait_for_timeout(1500)
+                download_button.dblclick()
+                print("Ubicacion 2")
             download = download_info.value
 
             # Saves the file in a tmp folder
             current_directory = os.getcwd()
             tmp_directory = os.path.join(current_directory, "tmp")
+            print(f"\nEL directorio tmp es: {tmp_directory}")
             try:
                 download.save_as(os.path.join(tmp_directory, filename))
                 return True
-            
+
             except FileNotFoundError:
                 print(f"Directory '{tmp_directory}' not found, and it couldn't be created.")
                 return False
-            
+
             except Exception as e:
                 print(f"Error saving the file: {e}")
                 return False
-            
+
     except Exception as e:
         print(f"Error during data download: {e}")
         raise
-        
+
 if __name__ == "__main__":
     with yaspin(text="Downloading csv file...", color="yellow") as spinner:
         try:
             with sync_playwright() as playwright:
-                run(playwright, invisible=False)
+                run(playwright)
             spinner.ok("✔️  Download completed!")
         except Exception as e:
             spinner.fail(f"Download failed: {e}")

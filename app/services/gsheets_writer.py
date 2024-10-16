@@ -35,9 +35,10 @@ def authorize_gsheets():
 
     try:
         current_directory = os.getcwd()
+        secret_key_path = os.path.join(current_directory, "config", "secret_key.json")
 
-        creds = ServiceAccountCredentials.from_json_keyfile_name(f"{current_directory}\\config\\secret_key.json", scopes=scopes)
-        
+        creds = ServiceAccountCredentials.from_json_keyfile_name(secret_key_path, scopes=scopes)
+         
         return gspread.authorize(creds)
     except FileNotFoundError:
         print("Google Sheets credentials file not found")
