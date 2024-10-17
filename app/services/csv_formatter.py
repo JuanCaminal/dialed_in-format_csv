@@ -10,9 +10,7 @@ def format_csv(input_filename='temporary_file.csv'):
     TITLE = "Full Name Upload"
 
     customers_formatted = []
-    project_root = get_project_root()
-    
-    csv_file_path = os.path.join(project_root, "tmp", "temporary_file.csv")
+    csv_file_path = os.path.join("/tmp", "temporary_file.csv")
     
     try:
         with open(csv_file_path) as input_file:

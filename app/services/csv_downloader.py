@@ -84,7 +84,7 @@ def download_data(page, filename):
 
             # Saves the file in a tmp folder
             current_directory = os.getcwd()
-            tmp_directory = os.path.join(current_directory, "tmp")
+            tmp_directory = "/tmp"
             try:
                 download.save_as(os.path.join(tmp_directory, filename))
                 return True
